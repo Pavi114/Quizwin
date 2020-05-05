@@ -3,7 +3,7 @@ from django.shortcuts import render
 
 from quiz.mixins.requires_login import LoginRequiredMixin
 
-class Quiz(LoginRequiredMixin, View):
+class QuizView(LoginRequiredMixin, View):
 
     def get(self, request, quiz_id):
         '''
@@ -45,8 +45,7 @@ class Quiz(LoginRequiredMixin, View):
         '''
         return {}
 
-class Round(LoginRequiredMixin, View):
-
+class RoundView(LoginRequiredMixin, View):
     def put(self, request, quiz_id):
         '''
         Create a round
@@ -76,7 +75,7 @@ class Round(LoginRequiredMixin, View):
         '''
         return {}    
 
-class Question(LoginRequiredMixin, View):
+class QuestionView(LoginRequiredMixin, View):
 
     def put(self, request, round_id):
         '''

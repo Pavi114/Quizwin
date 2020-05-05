@@ -5,6 +5,6 @@ from quiz.views import create, join, profile
 
 urlpatterns = [
     path('', join.JoinView.as_view(), name="join"),
-    path('create', create.Quiz.as_view(), name="create"),
+    path('create', create.QuizView.as_view(), name="create"),
     path('accounts/profile/', profile.ProfileView.as_view(), name='profile')
 ]

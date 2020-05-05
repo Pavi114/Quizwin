@@ -6,9 +6,9 @@ from quiz.mixins.timestamp import TimestampModel
 
 # Create your models here.
 class Quiz(TimestampModel):
-    name = models.CharField(max_length=64)
+    name = models.CharField(max_length=64, default='Untitled Quiz')
     host = models.ForeignKey(User, on_delete=models.CASCADE)
-    secret = models.CharField(max_length=32)
+    secret = models.CharField(max_length=32, default='')
     started = models.BooleanField(default=False)
     ended = models.BooleanField(default=False)
 
