@@ -46,6 +46,16 @@ class QuizView(LoginRequiredMixin, View):
         return {}
 
 class RoundView(LoginRequiredMixin, View):
+
+    def get(self, request, quiz_id, round_id):
+        '''
+        Render the form to create / edit a round
+        Attributes:
+            PARAMS:
+                - quiz_id
+                - round_id
+        '''
+
     def put(self, request, quiz_id):
         '''
         Create a round
@@ -55,53 +65,70 @@ class RoundView(LoginRequiredMixin, View):
         '''
         return {}
 
-    def post(self, request, round_id):
+    def post(self, request, quiz_id, round_id):
         '''
         Edit a round
         Attributes:
             PARAMS:
+                - quiz_id
                 - round_id
             POST:
                 - round_info 
         '''
         return {}
 
-    def delete(self, request, round_id):
+    def delete(self, request, quiz_id, round_id):
         '''
         Delete a round
         Attributes:
             PARAMS:
+                - quiz_id
                 - round_id
         '''
         return {}    
 
 class QuestionView(LoginRequiredMixin, View):
 
-    def put(self, request, round_id):
+    def get(self, request, quiz_id, round_id, question_id):
+        '''
+        Render the form to create / edit a question
+        Attributes:
+            PARAMS:
+                - quiz_id
+                - round_id
+                - question_id
+        '''
+
+    def put(self, request, quiz_id, round_id):
         '''
         Create a question
         Attributes:
             PARAMS:
+                - quiz_id
                 - round_id
         '''
         return {}
 
-    def post(self, request, question_id):
+    def post(self, request, quiz_id, round_id, question_id):
         '''
         Edit a question
         Attributes:
             PARAMS:
+                - quiz_id
+                - round_id
                 - question_id
             POST:
                 - question_info
         '''
         return {}
 
-    def delete(self, request, question_id):
+    def delete(self, request, quiz_id, round_id, question_id):
         '''
         Delete a question
         Attributes:
             PARAMS:
+                - quiz_id
+                - round_id
                 - question_id
         '''
         return {}
