@@ -97,6 +97,7 @@ DATABASES = {
         'NAME': os.environ.get('DB_NAME'),
         "USER": os.environ.get('DB_USERNAME'),
         "PASSWORD": os.environ.get('DB_PASSWORD'),
+        "ATOMIC_REQUESTS": True,
         'OPTIONS': {
             'charset': os.environ.get('DB_CHARSET'),
         }

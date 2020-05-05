@@ -1,4 +1,51 @@
 {% extends "base.html" %}
 
 {% block content %}
+    <a href="{% url 'quiz:profile' %}">Back</a>
+    <hr>
+    <h1 class="text-center">Edit Quiz</h1>
+    <hr>
+    <h2>General</h2>
+    <form action="{% url 'quiz:edit-quiz' quiz_id=quiz.id %}" method="POST">{% csrf_token %}
+        <div class="form-group">
+            <label for="quiz-name-input">Quiz Name</label>
+            <input name="name" type="text" class="form-control" id="quiz-name-input" value="{{ quiz.name }}">
+            <small>The name of your quiz</small>
+        </div>
+        <div class="form-group">
+            <label for="quiz-secret-input">Quiz Secret</label>
+            <input name="secret" type="text" class="form-control" id="quiz-secret-input" value="{{ quiz.secret }}">
+            <small>The secret code required to participate in your quiz</small>
+        </div>
+        <div class="form-action">
+            <button type="submit" class="btn btn-info">Save</button>
+        </div>
+    </form>
+    <hr>
+    <h2>Rounds</h2>
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Type</th>
+            <th scope="col">Edit</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for round in quiz.rounds %}
+                <tr>
+                    <th scope="row">{{round.round_number}}</th>
+                    <td>{{round.name}}</td>
+                    <td>{{round.type}}</td>
+                    <td>
+                        <a href="{% url 'quiz:edit-round' quiz_id=quiz.id round_id=round.id %}">Edit</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <form action="{% url 'quiz:create-round' quiz_id=quiz.id %}" method="POST">{% csrf_token %}
+        <button type="submit" class="btn btn-info">Add Round</button>
+    </form>
 {% endblock content %}

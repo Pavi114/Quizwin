@@ -1,11 +1,13 @@
 {% extends "base.html" %}
 
 {% block content %}
+    <span class="d-flex justify-content-around align-items-center">
+        <h1 class="col-9">My Quizes</h1>
+        <form class="col-3" action="{% url 'quiz:create-quiz' %}" method="POST">{% csrf_token %}
+            <button class="btn btn-success btn-block">New</button>
+        </form>
+    </span>
     {% if quizzes %}
-        <span class="d-flex justify-content-around align-items-center">
-            <h1 class="col-9">My Quizes</h1>
-            <a href="{% url 'quiz:create' %}" class="btn btn-success btn-block col-3">New</a>
-        </span>
         <ul class="list-group">
             {% for quiz in quizzes %}
                 <li class="list-group-item d-flex flex-row align-items-center">
@@ -13,8 +15,10 @@
                         {{ quiz.name }}
                     </span>
                     <span class="col-3">
-                        <a class="btn btn-info btn-block">View</a>
-                        <a class="btn btn-secondary btn-block">Edit</a>
+                        <a href="{% url 'quiz:edit-quiz' quiz_id=quiz.id %}" class="btn btn-info btn-block">Edit</a>
+                        <form class="mt-1" action="{% url 'quiz:delete-quiz' quiz_id=quiz.id %}" method="POST">{% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-block">Delete</button>
+                        </form>
                     </span>
                 </li>
             {% endfor %}

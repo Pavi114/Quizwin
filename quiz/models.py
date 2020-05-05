@@ -19,6 +19,10 @@ class Round(models.Model):
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
     type = models.CharField(max_length=1, choices=RoundType.choices)
     name = models.CharField(max_length=64)
+    round_number = models.IntegerField()
+
+    class Meta:
+        order_with_respect_to = 'round_number'
 
 class Text(models.Model):
     text = models.TextField(max_length=512)

@@ -19,4 +19,4 @@ class TimestampModel(models.Model):
             auto_updated_at_is_disabled = kwargs.pop("disable_auto_updated_at", False)
             if not auto_updated_at_is_disabled:
                 self.updated_at = tz.now()
-        super(TimestampMixin, self).save(*args, **kwargs)
+        super(TimestampModel, self).save(*args, **kwargs)

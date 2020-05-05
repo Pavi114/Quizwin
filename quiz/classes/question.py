@@ -71,7 +71,7 @@ class BaseQuestion:
 
 class NormalQuestion(BaseQuestion):
     def __init__(self, question):
-        assert question.type == 'Normal'
+        assert question.type == 'N'
 
         super().__init__(question)
 
@@ -114,7 +114,7 @@ class NormalQuestion(BaseQuestion):
 
 class ChoiceQuestion(BaseQuestion):
     def __init__(self, question):
-        assert question.type == 'MCQ'
+        assert question.type == 'C'
 
         super().__init__(question)
 
@@ -195,7 +195,7 @@ class ChoiceQuestion(BaseQuestion):
 
 class OrderQuestion(BaseQuestion):
     def __init__(self, question):
-        assert question.type == 'Order'
+        assert question.type == 'O'
 
         super.__init__(question)
 
@@ -278,9 +278,9 @@ class OrderQuestion(BaseQuestion):
         super().delete()
 
 questions = {
-    'Normal': NormalQuestion,
-    'MCQ': ChoiceQuestion,
-    'Order': OrderQuestion,
+    'N': NormalQuestion,
+    'C': ChoiceQuestion,
+    'O': OrderQuestion,
 }
 
 def get_question(question):

@@ -1,19 +1,12 @@
 from django.views import View
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 
 from quiz.mixins.requires_login import LoginRequiredMixin
+from quiz.models import Quiz
+from quiz.classes.quiz import create_quiz, get_quiz_or_404, filter_quiz_info
 
 
 class CreateQuizView(LoginRequiredMixin, View):
-
-    def get(self, request):
-        '''
-        Render the form to create a quiz
-        Attributes:
-            None
-        '''
-        context = {}
-        return render(request, 'quiz/create/quiz.html', context)
     
     def post(self, request):
         '''
@@ -21,8 +14,8 @@ class CreateQuizView(LoginRequiredMixin, View):
         Attributes:
             none.
         '''
-
-        return {}
+        quiz = create_quiz(request.user)
+        return redirect('quiz:edit-quiz', quiz_id=quiz.id)
 
 
 class EditQuizView(LoginRequiredMixin, View):
@@ -33,7 +26,12 @@ class EditQuizView(LoginRequiredMixin, View):
         Attributes:
             None
         '''
-        context = {}
+        quiz_wrapper = get_quiz_or_404(request.user, quiz_id)
+
+        context = {
+            'quiz': quiz_wrapper.edit_info()
+        }
+        # return context
         return render(request, 'quiz/create/quiz.html', context)
 
     def post(self, request, quiz_id):
@@ -45,7 +43,13 @@ class EditQuizView(LoginRequiredMixin, View):
             POST:
                 - quiz_info
         ''' 
-        return {}
+        quiz_wrapper = get_quiz_or_404(request.user, quiz_id)
+        
+        quiz_info = filter_quiz_info(request.POST)
+
+        quiz_wrapper.edit(quiz_info)
+        
+        return redirect('quiz:edit-quiz', quiz_id=quiz_id)
 
 
 class DeleteQuizView(LoginRequiredMixin, View):
@@ -57,4 +61,9 @@ class DeleteQuizView(LoginRequiredMixin, View):
             PARAMS:
                 - quiz_id
         '''
-        return {}   
+        quiz_wrapper = get_quiz_or_404(request.user, quiz_id)
+
+        quiz_wrapper.delete()
+
+        # TODO: Have some kinda notification in dashboard, "successfully deleted" etc
+        return redirect('quiz:profile') 

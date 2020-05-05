@@ -13,6 +13,9 @@ class BaseRound:
     def info(self):
         return model_to_dict(self.round)
 
+    def base_info(self):
+        return model_to_dict(self.round)
+
     @staticmethod
     def create(round_info):
         return Round.objects.create(**round_info)
@@ -27,7 +30,7 @@ class BaseRound:
 
 class SequentialRound(BaseRound):
     def __init__(self, round):
-        assert round.type == 'Sequential'
+        assert round.type == 'S'
         super().__init__(round)
 
     def info(self):
@@ -41,7 +44,7 @@ class SequentialRound(BaseRound):
     
 class BoardRound(BaseRound):
     def __init__(self, round):
-        assert round.type == 'Board'
+        assert round.type == 'B'
         super().__init__(round)
 
     def info(self):
@@ -55,11 +58,12 @@ class BoardRound(BaseRound):
         return info
 
 rounds = {
-    'Sequential': SequentialRound,
-    'Board': BoardRound
+    'S': SequentialRound,
+    'B': BoardRound
 }
 
 def get_round(round):
+    print(round.type)
     return rounds[round.type](round)
 
 def create_round(round_info):
