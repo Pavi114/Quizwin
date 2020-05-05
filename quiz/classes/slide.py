@@ -13,6 +13,9 @@ class BaseSlide:
     def create(type, fk):
         return Slide.objects.create(type=type, fk=fk)
 
+    def delete(self):
+        self.slide.delete()
+
 class TextSlide(BaseSlide):
     def __init__(self, slide):
         assert slide.type = 'Text'
@@ -32,6 +35,10 @@ class TextSlide(BaseSlide):
         text_field = Text.objects.create(text=text)
         return BaseSlide.create('Text', text_field.id)
 
+    def delete(self):
+        super().delete()
+        self.text.delete()
+
 class ImageSlide(BaseSlide):
     def __init__(self, slide):
         assert slide.type = 'Image'
@@ -50,6 +57,10 @@ class ImageSlide(BaseSlide):
     def create(image):
         image_field = Image.objects.create(image=image)
         return BaseSlide.create('Image', image_field.id)
+
+    def delete(self):
+        super().delete()
+        self.image.delete()
 
 slides = {
     'Text': TextSlide,

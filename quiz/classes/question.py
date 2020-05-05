@@ -47,6 +47,27 @@ class BaseQuestion:
 
         return question
 
+    def edit(self, question_info):
+        self.question.__dict__.update(question_info.question)
+        self.question.save()
+
+        QuestionSlide.objects.filter(question=self.question).delete()
+        for slide in self.slides:
+            slide.delete()
+
+        slides = [create_slide(slide) for slide in question_info.slides]
+        for i, slide in enumerate(slides):
+            QuestionSlide.objects.create(
+                question=self.question,
+                slide=slide,
+                slide_number=i
+            )
+
+    def delete(self):
+        for slide in self.slides:
+            slide.delete()
+
+        self.question.delete()
 
 class NormalQuestion(BaseQuestion):
     def __init__(self, question):
@@ -54,6 +75,7 @@ class NormalQuestion(BaseQuestion):
 
         super().__init__(question)
 
+        self.answer = NormalAnswer.objects.get(question=self.question)
         self.answer_slide = get_slide(self.answer.slide)
 
     def answer(self):
@@ -74,6 +96,21 @@ class NormalQuestion(BaseQuestion):
         )
 
         return question
+
+    def edit(self, question_info):
+        super().edit(question_info)
+
+        self.answer_slide.delete()
+
+        answer_slide = create_slide(question_info.answer)
+        NormalAnswer.objects.create(
+            question=self.question,
+            slide=answer_slide
+        )
+
+    def delete(self):
+        self.answer_slide.delete()
+        super().delete()
 
 class ChoiceQuestion(BaseQuestion):
     def __init__(self, question):
@@ -130,6 +167,31 @@ class ChoiceQuestion(BaseQuestion):
                 )
 
         return question
+
+    def edit(self, question_info):
+        super().edit(question_info)
+
+        for slide in self.choice_slides:
+            slide.delete()
+
+        choice_slides = [create_slide(slide) for slide in question_info.choices]
+        for i, slide in enumerate(choice_slides):
+            choice = Choice.objects.create(
+                question=question,
+                slide=slide,
+                choice_number=i
+            )
+            if i == question_info.answer:
+                ChoiceAnswer.objects.create(
+                    question=question,
+                    choice=choice
+                )
+
+    def delete(self):
+        for slide in self.choice_slides:
+            slide.delete()
+
+        super().delete()
 
 class OrderQuestion(BaseQuestion):
     def __init__(self, question):
@@ -189,6 +251,32 @@ class OrderQuestion(BaseQuestion):
 
         return question
 
+    def edit(self, question_info):
+        super().edit(question_info)
+
+        OrderAnswer.objects.get(question=self.question).delete()
+        for slide in self.choice_slides:
+            slide.delete()
+
+        choice_slides = [create_slide(slide) for slide in question_info.choices]
+        for i, slide in enumerate(choice_slides):
+            choice = Choice.objects.create(
+                question=question,
+                slide=slide,
+                choice_number=i
+            )
+        
+        OrderAnswer.objects.create(
+            question=question,
+            order=question_info.order
+        )
+
+    def delete(self):
+        for slide in self.choice_slides:
+            slide.delete()
+
+        super().delete()
+
 questions = {
     'Normal': NormalQuestion,
     'MCQ': ChoiceQuestion,
@@ -200,3 +288,9 @@ def get_question(question):
 
 def create_question(question_info):
     return questions[question_info.type].create(question_info)
+
+def edit_question(question, question_info):
+    questions[question.type](question).edit(question_info)
+
+def delete_question(question):
+    questions[question.type](question).delete()
