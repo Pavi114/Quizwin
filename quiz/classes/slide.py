@@ -1,4 +1,5 @@
 from quiz.models import Text, Image, Slide
+from quiz.constants import SlideType
 
 class BaseSlide:
     def __init__(self, slide):
@@ -18,7 +19,7 @@ class BaseSlide:
 
 class TextSlide(BaseSlide):
     def __init__(self, slide):
-        assert slide.type == 'T'
+        assert slide.type == SlideType.TEXT
 
         super().__init__(slide)
 
@@ -41,7 +42,7 @@ class TextSlide(BaseSlide):
 
 class ImageSlide(BaseSlide):
     def __init__(self, slide):
-        assert slide.type == 'I'
+        assert slide.type == SlideType.IMAGE
 
         super().__init__(slide)
 
@@ -63,8 +64,8 @@ class ImageSlide(BaseSlide):
         self.image.delete()
 
 slides = {
-    'T': TextSlide,
-    'I': ImageSlide
+    SlideType.TEXT: TextSlide,
+    SlideType.IMAGE: ImageSlide
 }
 
 def get_slide(slide):

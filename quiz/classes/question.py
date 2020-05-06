@@ -3,6 +3,7 @@ from django.db.models import F
 
 from quiz.models import Question, QuestionSlide, NormalAnswer, Choice, ChoiceAnswer, OrderAnswer, QuestionScores, Score
 from quiz.classes.slide import get_slide, create_slide
+from quiz.constants import QuestionType
 
 class BaseQuestion:
     def __init__(self, question):
@@ -71,7 +72,7 @@ class BaseQuestion:
 
 class NormalQuestion(BaseQuestion):
     def __init__(self, question):
-        assert question.type == 'N'
+        assert question.type == QuestionType.NORMAL
 
         super().__init__(question)
 
@@ -114,7 +115,7 @@ class NormalQuestion(BaseQuestion):
 
 class ChoiceQuestion(BaseQuestion):
     def __init__(self, question):
-        assert question.type == 'C'
+        assert question.type == QuestionType.MCQ
 
         super().__init__(question)
 
@@ -195,7 +196,7 @@ class ChoiceQuestion(BaseQuestion):
 
 class OrderQuestion(BaseQuestion):
     def __init__(self, question):
-        assert question.type == 'O'
+        assert question.type == QuestionType.ORDERING
 
         super.__init__(question)
 
@@ -278,9 +279,9 @@ class OrderQuestion(BaseQuestion):
         super().delete()
 
 questions = {
-    'N': NormalQuestion,
-    'C': ChoiceQuestion,
-    'O': OrderQuestion,
+    QuestionType.NORMAL: NormalQuestion,
+    QuestionType.MCQ: ChoiceQuestion,
+    QuestionType.ORDERING: OrderQuestion,
 }
 
 def get_question(question):

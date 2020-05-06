@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
 
 from quiz.mixins.timestamp import TimestampModel
+from quiz.constants import RoundType, QuestionType, SlideType
 
 # Create your models here.
 class Quiz(TimestampModel):
@@ -13,9 +14,6 @@ class Quiz(TimestampModel):
     ended = models.BooleanField(default=False)
 
 class Round(models.Model):
-    class RoundType(models.TextChoices):
-        SEQUENTIAL = 'S', _('Sequential')
-        BOARD = 'B', _('Board')
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
     type = models.CharField(max_length=1, choices=RoundType.choices)
     name = models.CharField(max_length=64)
@@ -31,21 +29,14 @@ class Image(models.Model):
     image = models.URLField()
 
 class Slide(models.Model):
-    class SlideType(models.TextChoices):
-        TEXT = 'T', _('Text')
-        IMAGE = 'I', _('Image')
     type = models.CharField(max_length=1, choices=SlideType.choices)
     fk = models.IntegerField()
 
 class Question(models.Model):
-    class QuestionTypes(models.TextChoices):
-        NORMAL = 'N', _('Normal')
-        MCQ = 'C', _('MCQ')
-        ORDERING = 'O', _('Order')
     round = models.ForeignKey(Round, on_delete=models.CASCADE)
     question_number = models.IntegerField(null=True)
     category = models.TextField(null=True)
-    type = models.TextField(max_length=1, choices=QuestionTypes.choices)
+    type = models.TextField(max_length=1, choices=QuestionType.choices)
     slides = models.IntegerField(default=1)
     points = models.IntegerField()
     degradation = models.FloatField(default=0)

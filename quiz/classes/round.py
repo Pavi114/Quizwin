@@ -4,6 +4,7 @@ from django.forms import model_to_dict
 
 from quiz.models import Round, Question
 from quiz.classes.question import delete_question
+from quiz.constants import RoundType
 
 class BaseRound:
     def __init__(self, round):
@@ -30,7 +31,7 @@ class BaseRound:
 
 class SequentialRound(BaseRound):
     def __init__(self, round):
-        assert round.type == 'S'
+        assert round.type == RoundType.SEQUENTIAL
         super().__init__(round)
 
     def info(self):
@@ -44,7 +45,7 @@ class SequentialRound(BaseRound):
     
 class BoardRound(BaseRound):
     def __init__(self, round):
-        assert round.type == 'B'
+        assert round.type == RoundType.BOARD
         super().__init__(round)
 
     def info(self):
@@ -58,8 +59,8 @@ class BoardRound(BaseRound):
         return info
 
 rounds = {
-    'S': SequentialRound,
-    'B': BoardRound
+    RoundType.SEQUENTIAL: SequentialRound,
+    RoundType.BOARD: BoardRound
 }
 
 def get_round(round):
